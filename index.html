@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#FFF6E9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Isla Talks">
+<title>Isla Talks</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preload" as="image" href="isla/listen.webp">
+<link rel="preload" as="image" href="isla/cheer.webp">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=chillax@500,600,700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Start splash (unlocks audio on iPad / phone) -->
+<section id="splash" class="screen active" aria-label="Start">
+  <div class="splash-inner">
+    <img class="isla-hero" src="isla/wave.webp" alt="Isla waving hello" width="375" height="900">
+    <h1 class="splash-title">Isla Talks</h1>
+    <p class="splash-sub">Talk and play with Isla</p>
+    <button id="startBtn" class="btn-start">Tap to play</button>
+    <p class="splash-note">Turn the sound up. Sit face to face and play together.</p>
+  </div>
+</section>
+
+<!-- Home -->
+<section id="home" class="screen" aria-label="Choose a game">
+  <header class="topbar">
+    <div class="brand">
+      <img src="isla/head.webp" alt="" width="44" height="44">
+      <span>Isla Talks</span>
+    </div>
+    <div class="stars" aria-live="polite"><span class="star-ico">⭐</span><span class="star-count">0</span></div>
+  </header>
+  <main class="home-grid">
+    <button class="tile t-coral" data-go="cards"><span class="tile-emoji">🃏</span><span class="tile-name">Word Cards</span></button>
+    <button class="tile t-sky" data-go="bubbles"><span class="tile-emoji">🫧</span><span class="tile-name">Bubble Pop</span></button>
+    <button class="tile t-sun" data-go="race"><span class="tile-emoji">🚗</span><span class="tile-name">Ready, Set, Go</span></button>
+    <button class="tile t-leaf" data-go="animals"><span class="tile-emoji">🐮</span><span class="tile-name">Animal Bag</span></button>
+    <button class="tile t-grape" data-go="peek"><span class="tile-emoji">🙈</span><span class="tile-name">Peekaboo</span></button>
+    <button class="tile t-rose" data-go="songs"><span class="tile-emoji">🎵</span><span class="tile-name">Sing Along</span></button>
+    <button class="tile t-mint" data-go="mouth"><span class="tile-emoji">👄</span><span class="tile-name">Silly Mouths</span></button>
+    <button class="tile t-peach" data-go="blocks"><span class="tile-emoji">🧱</span><span class="tile-name">Up and Down</span></button>
+  </main>
+  <footer class="home-foot">
+    <button id="grownBtn" class="grown-btn" aria-label="Grown-ups: press and hold to open">
+      <svg class="hold-ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="19"/></svg>
+      <span class="grown-ico">⚙️</span>
+      <span class="grown-label">Grown-ups <small>(press and hold)</small></span>
+    </button>
+  </footer>
+</section>
+
+<!-- Generic game screen shell -->
+<section id="game" class="screen" aria-label="Game">
+  <header class="topbar">
+    <button class="back-btn" id="backBtn" aria-label="Back to games">‹</button>
+    <h2 class="game-title" id="gameTitle">Game</h2>
+    <div class="stars" aria-live="polite"><span class="star-ico">⭐</span><span class="star-count">0</span></div>
+  </header>
+  <div class="game-body" id="gameBody"></div>
+  <div class="turn" id="turn" hidden>
+    <span class="turn-label">Her turn</span>
+    <span class="turn-dots" id="turnDots"></span>
+  </div>
+  <div class="buddy" id="buddy" aria-hidden="true"><img id="buddyImg" src="isla/listen.webp" alt=""><span class="buddy-say" id="buddySay">Your turn!</span></div>
+  <footer class="actionbar">
+    <button class="act act-again" id="againBtn"><span>🔊</span> <b class="lbl-long">Say it again</b><b class="lbl-short">Again</b></button>
+    <button class="act act-tried" id="triedBtn"><span>⭐</span> She tried</button>
+  </footer>
+</section>
+
+<!-- Grown-ups corner -->
+<section id="grown" class="screen" aria-label="Grown-ups corner">
+  <header class="topbar">
+    <button class="back-btn" id="grownBack" aria-label="Back to games">‹</button>
+    <h2 class="game-title">Grown-ups Corner</h2>
+    <div></div>
+  </header>
+  <main class="grown-body">
+    <section class="panel">
+      <h3>Today’s tries</h3>
+      <p class="muted" id="triesSummary">No tries yet. Tap ⭐ <b>She tried</b> any time she makes a sound or tries a word. Every attempt counts.</p>
+      <ul class="tries-list" id="triesList"></ul>
+      <p class="muted small">Stars, tries, and settings are saved on this device. Jot down new words in a notebook to share with her speech therapist.</p>
+      <button class="btn-sm" id="resetBtn">Clear progress</button>
+    </section>
+
+    <section class="panel">
+      <h3>Voice and pacing</h3>
+      <label class="row">
+        <span>Talking speed</span>
+        <input type="range" id="rate" min="0.5" max="1" step="0.05" value="0.75">
+        <output id="rateOut">Slow</output>
+      </label>
+      <label class="row">
+        <span>Wait time for her turn</span>
+        <select id="wait">
+          <option value="3">3 seconds</option>
+          <option value="5" selected>5 seconds</option>
+          <option value="8">8 seconds</option>
+        </select>
+      </label>
+      <label class="row">
+        <span>Voice</span>
+        <select id="voice"><option value="natural">Natural voice (recommended)</option></select>
+      </label>
+      <button class="btn-sm" id="testVoice">🔊 Test voice</button>
+    </section>
+
+    <section class="panel">
+      <h3>Today’s words</h3>
+      <p class="muted">Pick 5–10 words to practice. They show up in the <b>Today</b> tab of Word Cards. Ask her speech therapist which sounds to put first.</p>
+      <div class="focus-grid" id="focusGrid"></div>
+    </section>
+
+    <section class="panel tips">
+      <h3>Quick reminders</h3>
+      <ul>
+        <li><b>Face to face.</b> Hold the screen beside your face so she can watch your mouth and the picture together.</li>
+        <li><b>Say it with the app.</b> Say each word yourself, slowly, right along with the voice.</li>
+        <li><b>Wait.</b> The dots show her turn. Look at her and smile while you wait.</li>
+        <li><b>Every attempt counts.</b> “Ba” for “ball” is a win. Say the word back the right way (“Yes, ball!”) without asking her to repeat it.</li>
+        <li><b>Short and often.</b> 3–5 minutes at a time, a few times a day. Stop while it’s still fun.</li>
+        <li><b>Add it to the home screen.</b> In Safari, tap Share, then “Add to Home Screen.” On Android Chrome, open the ⋮ menu and choose “Add to Home screen.” It will open full screen like an app.</li>
+      </ul>
+    </section>
+  </main>
+</section>
+
+<div id="confetti" aria-hidden="true"></div>
+<div id="sticker" class="sticker" hidden><div class="sticker-card"><img src="isla/cheer.webp" alt="Isla cheering" class="sticker-isla"><span id="stickerEmoji">🦄</span><p>Sticker!</p></div></div>
+<div id="toast" class="toast" hidden></div>
+
+<script src="audio/clips.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
