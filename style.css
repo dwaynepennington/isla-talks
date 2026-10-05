@@ -270,3 +270,5 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:4px solid 
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.bubble{animation-duration:9s!important}}
+
+@media (max-width:520px){.buddy{height:110px;bottom:calc(94px + var(--safe-b))}.buddy-say{display:none}}
